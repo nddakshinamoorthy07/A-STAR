@@ -1,6 +1,6 @@
 <h1>ExpNo 4 : Implement A* search algorithm for a Graph</h1> 
-<h3>Name:       </h3>
-<h3>Register Number:           </h3>
+<h3>Name: DAKSHINA MOORTHY N D</h3>
+<h3>Register Number: 212224230049</h3>
 <H3>Aim:</H3>
 <p>To ImplementA * Search algorithm for a Graph using Python 3.</p>
 <H3>Algorithm:</H3>
@@ -49,6 +49,111 @@
     end (while loop)
 
 ``````
+
+# PROGRAM
+
+```
+
+from collections import defaultdict
+
+# Heuristic dictionary will be filled from input
+H_dist = {}
+
+# Get neighbors of a node
+def get_neighbors(v, graph):
+    if v in graph:
+        return graph[v]
+    return None
+
+def heuristic(n):
+    return H_dist[n]
+
+def aStarAlgo(start_node, stop_node, graph):
+    open_list = set([start_node])
+    closed_list = set([])
+
+    g = {}  # store distance from start
+    g[start_node] = 0
+
+    parents = {}  # store parents to reconstruct path
+    parents[start_node] = start_node
+
+    while len(open_list) > 0:
+
+        # find node with lowest f = g + h
+        n = None
+        for v in open_list:
+            if n is None or g[v] + heuristic(v) < g[n] + heuristic(n):
+                n = v
+
+        if n is None:
+            print("Path does not exist!")
+            return None
+
+        # If goal reached, reconstruct path
+        if n == stop_node:
+            path = []
+            while parents[n] != n:
+                path.append(n)
+                n = parents[n]
+            path.append(start_node)
+            path.reverse()
+            print("Path found:", path)
+            return path
+
+        # For all neighbors of node n
+        for (m, weight) in get_neighbors(n, graph):
+            # g(n) + edge weight
+            tentative_g = g[n] + weight
+
+            if m not in open_list and m not in closed_list:
+                open_list.add(m)
+                parents[m] = n
+                g[m] = tentative_g
+
+            else:
+                # If better path found
+                if g[m] > tentative_g:
+                    g[m] = tentative_g
+                    parents[m] = n
+
+                    if m in closed_list:
+                        closed_list.remove(m)
+                        open_list.add(m)
+
+        open_list.remove(n)
+        closed_list.add(n)
+
+    print("Path does not exist!")
+    return None
+
+
+
+# -------------------------
+# INPUT HANDLING
+# -------------------------
+
+graph = defaultdict(list)
+
+n, e = map(int, input().split())
+for i in range(e):
+    u, v, cost = input().split()
+    graph[u].append((v, int(cost)))
+    graph[v].append((u, int(cost)))  # undirected graph
+
+# read heuristics
+for i in range(n):
+    node, h = input().split()
+    H_dist[node] = int(h)
+
+start = input()
+goal = input()
+
+aStarAlgo(start, goal, graph)
+
+```
+
+
 
 <hr>
 <h2>Sample Graph I</h2>
@@ -117,3 +222,14 @@ G 0 <br>
 <h2>Sample Output</h2>
 <hr>
 Path found: ['A', 'E', 'D', 'G']
+
+# OUTPUT
+
+
+
+<img width="581" height="387" alt="image" src="https://github.com/user-attachments/assets/98aec788-85b4-4a23-a04c-c561f9e04286" />
+
+
+# RESULT 
+
+Thus, A* algorithm was implemented and the path was found.
